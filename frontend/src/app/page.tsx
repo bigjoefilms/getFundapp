@@ -39,6 +39,7 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
+        mode: 'no-cors'
       });
       setLoading(false)
       if (response.ok) {
