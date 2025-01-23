@@ -33,7 +33,7 @@ export default function Home() {
         <div className="pt-[100px] flex flex-col items-center md:text-sm text-[12px] ">
           <div className={`border border-black/15 px-4 h-10 rounded-lg  my-2 text-black/60 items-center flex justify-center gap-2 ${animateTop ? 'slide-in-bottom' : ''}`}>
             <div className="border border-black/15 px-2 rounded-lg flex items-center gap-3 " >
-              <div>What&#39s s New</div>
+              <div>What&#39;s s New</div>
               <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.7)]"></div>
             </div>
             <div> getfundapp is coming soon</div>
