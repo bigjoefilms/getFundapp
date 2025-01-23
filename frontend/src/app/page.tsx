@@ -33,7 +33,7 @@ export default function Home() {
     setLoading(true)
 
     try {
-      const response = await fetch("https://www.getfundapp.xyz/api/send", {
+      const response = await fetch("/api/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
