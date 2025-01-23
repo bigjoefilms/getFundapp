@@ -58,7 +58,7 @@ const Waitlist = () => {
       
       
     <div className=" sm:container  flex items-center h-screen flex-col relative overflow-hidden ">
-        <div className="pt-[200px] flex flex-col items-center md:text-sm text-[12px] justify-center ">
+        <div className="pt-50px md:pt-[200px] flex flex-col items-center md:text-sm text-[12px] justify-center ">
           <div
             className={`border border-black/15 px-2 h-10 rounded-lg  my-2 text-black/60 items-center flex justify-center gap-2 ${animateTop ? "slide-in-bottom" : ""}`}
           >
