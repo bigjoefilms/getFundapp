@@ -30,6 +30,7 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true)
 
     try {
       const response = await fetch("/api/send", {
@@ -39,9 +40,10 @@ export default function Home() {
         },
         body: JSON.stringify({ email }),
       });
-
+      setLoading(false)
       if (response.ok) {
         setEmail("");
+        
         toast.success("Thank you for joining our waitlist! 🚀");
       } else {
         setEmail("");
