@@ -58,7 +58,7 @@ const Waitlist = () => {
       
       
     <div className=" sm:container  flex items-center h-screen flex-col relative overflow-hidden ">
-        <div className="pt-100px md:pt-[200px] flex flex-col items-center md:text-sm text-[12px] justify-center ">
+        <div className="pt-[100px] md:pt-[200px] flex flex-col items-center md:text-sm text-[12px] justify-center ">
           <div
             className={`border border-black/15 px-2 h-10 rounded-lg  my-2 text-black/60 items-center flex justify-center gap-2 ${animateTop ? "slide-in-bottom" : ""}`}
           >
@@ -84,7 +84,7 @@ const Waitlist = () => {
             src="https://lottie.host/cf3e7f03-dae6-49ba-a23d-d12f0027f7ac/rGLcmDlab4.lottie"
             loop
             autoplay
-            className="absolute top-0 left-1/2 transform -translate-x-1/2   w-[800px] h-[800px]  blur-sm"
+            className="absolute top-0 left-1/2 transform -translate-x-1/2   w-[800px] h-[800px]  blur-md"
            
           />
 
