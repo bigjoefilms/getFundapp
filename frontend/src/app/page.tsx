@@ -3,12 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { Header } from "../sections/Header";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Footer } from '../sections/Footer';
+import { toast, ToastContainer  } from 'react-toastify';
+
 
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [animateTop, setAnimateTop] = useState(false);
   const [animateBottom, setAnimateBottom] = useState(false);
+
+
 
   useEffect(() => {
     // Trigger the animations on load
@@ -21,21 +25,25 @@ export default function Home() {
     // Simulate an API call or any async operation
     setTimeout(() => {
       setLoading(false);
+      
       // Perform any further actions here
-    }, 2000); // 2 seconds delay
+    }, 2000); 
+    toast.dark("You have successfully joined the waitlist!")// 2 seconds delay
   };
 
   return (
     <>
       <Header/>
+      <ToastContainer />
+
       <div className="container h-full justify-center flex items-center flex-col relative overflow-hidden ">
         
         <div className="pt-[100px] flex flex-col items-center md:text-sm text-[12px] ">
           <div className={`border border-black/15 px-4 h-10 rounded-lg  my-2 text-black/60 items-center flex justify-center gap-2 ${animateTop ? 'slide-in-bottom' : ''}`}>
             <div className="border border-black/15 px-2 rounded-lg flex items-center gap-3 " >
               <div>What&#39;s New</div>
-              <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.7)]"></div>
-            </div>
+              <div className="w-2 h-2 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(128,0,128,0.7)]"></div>      
+                    </div>
             <div> getfundapp is coming soon</div>
           </div>
           
@@ -49,6 +57,8 @@ export default function Home() {
             autoplay
             className="absolute top-0 left-1/2 transform -translate-x-1/2 z-0  w-[800px] h-[800px] blur-md "
           />
+
+
           
           <form className={`flex justify-center mt-5 relative z-10 gap-2 ${animateBottom ? 'slide-in-bottom' : ''}`}>
             <input type="email" placeholder="Enter your email" className="px-8 py-2 rounded-lg border border-black/15 "/>

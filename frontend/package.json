@@ -9,13 +9,19 @@
     "email": "email dev"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.10.0",
     "@lottiefiles/dotlottie-react": "^0.12.1",
     "@react-email/components": "^0.0.32",
     "@react-email/render": "^1.0.4",
+    "axios": "^1.7.9",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "19.0.0",
-    "tailwind-merge": "^2.6.0"
+    "react-hot-toast": "^2.5.1",
+    "react-toastify": "^11.0.3",
+    "resend": "^4.1.1",
+    "tailwind-merge": "^2.6.0",
+    "toast": "^0.5.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

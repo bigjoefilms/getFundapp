@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from '@clerk/nextjs'
 
 import "./globals.css";
 import {twMerge } from "tailwind-merge";
@@ -39,8 +40,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider waitlistUrl="/">
     <html lang="en">
       <body className={twMerge(Aeonik.className, "bg-[#efefef] text-black antialised)")}>{children}</body>
     </html>
+    </ClerkProvider>
   );
 }
