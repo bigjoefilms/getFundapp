@@ -30,8 +30,8 @@ const Aeonik = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "AI Startup Landing Page",
-  description: "A landing page for an AI startup created with Frontend Tribe",
+  title: "Getfund - DeFi's Crowdfunding",
+  description: "",
 };
 
 export default function RootLayout({
