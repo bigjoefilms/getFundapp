@@ -11,6 +11,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [animateTop, setAnimateTop] = useState(false);
   const [animateBottom, setAnimateBottom] = useState(false);
+  const [email, setEmail] = useState<string>();
 
 
 
@@ -19,17 +20,40 @@ export default function Home() {
     setAnimateTop(true);
     setAnimateBottom(true);
   }, []);
+  
 
-  const handleClick = () => {
-    setLoading(true);
-    // Simulate an API call or any async operation
-    setTimeout(() => {
-      setLoading(false);
-      
-      // Perform any further actions here
-    }, 2000); 
-    toast.dark("You have successfully joined the waitlist!")// 2 seconds delay
+
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setEmail("");
+        toast.success("Thank you for joining our waitlist! 🚀");
+      } else {
+        setEmail("");
+        toast.error("Oops! Something went wrong!");
+      }
+    } catch (err) {
+      setEmail("");
+      console.error(err);
+    }
+  };
+
+  
 
   return (
     <>
@@ -60,12 +84,18 @@ export default function Home() {
 
 
           
-          <form className={`flex justify-center mt-5 relative z-10 gap-2 ${animateBottom ? 'slide-in-bottom' : ''}`}>
-            <input type="email" placeholder="Enter your email" className="px-8 py-2 rounded-lg border border-black/15 "/>
+          <form onSubmit={handleSubmit} className={`flex justify-center mt-5 relative z-10 gap-2 ${animateBottom ? 'slide-in-bottom' : ''}`}>
+          <input
+  type="email"
+  placeholder="Enter your email"
+  value={email}
+  onChange={handleEmailChange}
+  className="px-8 py-2 rounded-lg border border-black/15"
+/>
             <button
               type="submit"
               className="bg-black text-white py-2 px-8 rounded-lg font-medium text-md relative"
-              onClick={handleClick}
+              
               disabled={loading}
             >
               {loading ? (
