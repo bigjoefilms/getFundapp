@@ -11,7 +11,7 @@ const Aeonik = localFont({
   src: [
     {
       path: '../fonts/A-Bold.otf',
-      weight: '400',
+      weight: '500',
       style: 'bold',
     },
     {

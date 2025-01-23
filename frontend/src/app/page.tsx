@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <>
       <Header/>
-      <div className="container h-full justify-center flex items-center flex-col relative ">
+      <div className="container h-full justify-center flex items-center flex-col relative overflow-hidden ">
         
         <div className="pt-[100px] flex flex-col items-center md:text-sm text-[12px] ">
           <div className={`border border-black/15 px-4 h-10 rounded-lg  my-2 text-black/60 items-center flex justify-center gap-2 ${animateTop ? 'slide-in-bottom' : ''}`}>
