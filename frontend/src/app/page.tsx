@@ -1,13 +1,33 @@
 "use client"
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { Features } from "../sections/Feature";
+import { Header } from "../sections/Header";
+import Hero from "../sections/Hero";
+
+
+
+
+
+
 
 export default function Home() {
-  const router = useRouter();
+ 
+  
 
-  useEffect(() => {
-    router.replace('/waitlist');
-  }, [router]);
+  return (
+    <>
+    <section className="px-2">
+    <Header />
+    
+           
 
-  return null;
+    <Hero/>
+    <Features/>
+    
+   
+    </section>
+   
+    
+     
+    </>
+  );
 }

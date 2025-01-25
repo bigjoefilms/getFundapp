@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import {twMerge } from "tailwind-merge";
 import localFont from 'next/font/local'
-
+import ContextProvider from '../context'
 
 
 
@@ -42,7 +42,9 @@ export default function RootLayout({
   return (
     
     <html lang="en">
-      <body className={twMerge(Aeonik.className, "bg-[#efefef] text-black antialised)")}>{children}</body>
+      <body className={twMerge(Aeonik.className, "bg-[#efefef] text-black antialised)")}>
+      <ContextProvider>  {children}</ContextProvider>
+       </body>
     </html>
     
   );
