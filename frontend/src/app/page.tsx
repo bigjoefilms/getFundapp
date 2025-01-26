@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <>
-    <section className="px-2">
+    <section className="px-2 py-4">
     <Header />
     
            

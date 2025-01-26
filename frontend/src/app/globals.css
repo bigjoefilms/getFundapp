@@ -68,7 +68,7 @@ body {
 
 /* Title */
 .modal-title {
-  text-align: center;
+  text-align: start;
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 16px;

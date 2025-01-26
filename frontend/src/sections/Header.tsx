@@ -31,7 +31,7 @@ export const Header = () => {
      
   return (
    
-    <header className="md:px-9 px-0 py-6 flex  justify-between container">
+    <header className="md:px-9 px-0 my-6 flex py-2 rounded-xl justify-between container sticky top-0 backdrop-blur-sm z-20 bg-white/30">
         <div className="flex items-center gap-3">
         <Image
         src={logoImage}

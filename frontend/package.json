@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@lottiefiles/dotlottie-react": "^0.12.1",
     "@react-email/components": "^0.0.32",
     "@react-email/render": "^1.0.4",
@@ -18,6 +20,7 @@
     "@reown/appkit-adapter-solana": "^1.0.0",
     "@reown/appkit-wallet-button": "^1.6.5",
     "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.98.0",
     "axios": "^1.7.9",
     "framer-motion": "^12.0.3",
     "next": "15.1.6",
