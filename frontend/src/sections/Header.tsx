@@ -1,5 +1,5 @@
 "use client"
-import logoImage from "@/src/assets/logo1.png";
+import logoImage from "../../src/assets/logo1.png";
 import Image from "next/image";
 import Button from "../components/Button";
 import {  useAppKit  } from '@reown/appkit/react'
