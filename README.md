@@ -45,7 +45,7 @@ GetFund uses Reown AppKit for social login authentication. Here’s how it’s i
 
 Import the necessary modules:
 
- <code>
+ <pre> <code>
 import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 import type { Provider } from '@reown/appkit-adapter-solana/react';
 Initialize the AppKit provider and account:
@@ -62,13 +62,14 @@ if (isConnected) {
 } else {
   console.log('User is not connected');
 }
-</code>
-Signing Messages
+</code> </pre>
+
+## Signing Messages
 To sign messages using Reown AppKit, follow these steps:
 
 Create a function to prompt the modal for signing the message:
+<pre> <code>
 
-JavaScript
 const handleSignMsg = async () => {
   // Message to sign
   const encodedMessage = new TextEncoder().encode("Hello Reown AppKit!");
@@ -79,9 +80,10 @@ const handleSignMsg = async () => {
   // Print the signed message in hexadecimal format
   console.log(Buffer.from(sig).toString("hex"));
 };
-Call the function when needed:
+  </code> </pre>
+## Call the function when needed:
 
-JavaScript
+<pre> <code>
 return (
   isConnected && (
     <div>
@@ -89,16 +91,18 @@ return (
     </div>
   )
 );
-Sending Transactions
+</code> </pre>
+## Sending Transactions
 To send a transaction using Reown AppKit, follow these steps:
 
 Import the necessary modules:
 
-JavaScript
+<pre> <code>
 import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
-Create the function to raise the modal to send the transaction:
+  </code> </pre>
+## Create the function to raise the modal to send the transaction:
 
-JavaScript
+<pre> <code>
 const handleSendTx = async () => {
   if (!address) {
     console.error("Wallet not connected.");
@@ -126,9 +130,10 @@ const handleSendTx = async () => {
   // Print the Transaction Signature
   console.log("Transaction signature:", signature);
 };
-Call the function when needed:
+</code> </pre>
+## Call the function when needed:
 
-JavaScript
+<pre> <code>
 return (
   isConnected && (
     <div>
@@ -136,7 +141,9 @@ return (
     </div>
   )
 );
-Contributing
+</code> </pre>
+
+## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any changes.
 
 
