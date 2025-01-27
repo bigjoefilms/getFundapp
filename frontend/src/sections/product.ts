@@ -17,7 +17,7 @@ export const products : Product[] = [
     raised: "$1000",
     creator: "6trZQ2U1oWzLmcqRT98ba7JtMZsdnrzNEzN7svH11VCy",
     daysAgo: 5,
-    image: "../assets/solartech_community_charger.png",
+    image: "/assets/solartech_community_charger.png",
     category: "Infrastructure",
   },
   {
@@ -27,7 +27,7 @@ export const products : Product[] = [
     raised: "$2000",
     creator: "AEW5QNAY3HUGzQUpoprWRWy9ozUtdkqNLJfcok1gKJzn",
     daysAgo: 3,
-    image: "../assets/cleanwater_initiative.png",
+    image: "/assets/cleanwater_initiative.png",
     category: "DAO",
   },
   {
@@ -37,7 +37,7 @@ export const products : Product[] = [
     raised: "$2000",
     creator: "AEW5QNAY3HUGzQUpoprWRWy9ozUtdkqNLJfcok1gKJzn",
     daysAgo: 10,
-    image: "../assets/greenspaces_urban_gardens.png",
+    image: "/assets/greenspaces_urban_gardens.png",
     category: "Dev Tool",
   },
   // {

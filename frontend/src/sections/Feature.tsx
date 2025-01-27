@@ -3,20 +3,21 @@ import { products, Product } from "./product";
 import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 // import { useAppKitConnection } from '@reown/appkit-adapter-solana/react';
 import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle,faSearch  } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Provider } from '@reown/appkit-adapter-solana/react';
 import Image from "next/image";
 // import solartechImage from './assets/solartech_community_charger.png';
 // import cleanwaterImage from './assets/cleanwater_initiative.png';
-import greenspacesImage from '../assets/greenspaces_urban_gardens.png';
+// import greenspacesImage from '../assets/greenspaces_urban_gardens.png';
 
 export const Features: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { address} = useAppKitAccount();
   // const { connection } = useAppKitConnection();
   const { walletProvider } = useAppKitProvider<Provider>('solana');
-  const connection = new Connection('https://devnet.helius-rpc.com/?api-key=c7e5b412-c980-4f46-8b06-2c85c0b4a08d', 'confirmed');
+  // const connection = new Connection('https://devnet.helius-rpc.com/?api-key=', 'confirmed');
+  const connection = new Connection(`https://devnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`, 'confirmed');
 
 
   
@@ -52,10 +53,16 @@ export const Features: React.FC = () => {
     return matchesCategory && matchesSearchTerm;
   });
 
-  // function shortenAddress(address: string, length: number = 6): string {
-  //   if (!address || address.length <= length) return address;
-  //   return `${address.slice(0, length)}...`;
-  // }
+  const openModal = (product: Product) => {
+    setSelectedProduct(product);
+    setModalOpen(true);
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+  };
+
+  function shortenAddress(address: string, length: number = 6): string {
+    if (!address || address.length <= length) return address;
+    return `${address.slice(0, length)}...`;
+  }
 
   const closeModal = () => {
     setModalOpen(false);
@@ -183,9 +190,7 @@ export const Features: React.FC = () => {
 
   return (
     <section>
-      
-        {/* Category Buttons */}
-        <div className="mt-32 flex relative w-full flex-col md:container cursor-pointer">
+      <div className="mt-32 flex relative w-full flex-col md:container cursor-pointer">
         {/* Category Buttons */}
         <div className="flex md:gap-4 gap-2 mb-4">
           {["All", "Infrastructure", "DAO", "Dev Tool", "DeFi"].map((category) => (
@@ -225,34 +230,50 @@ export const Features: React.FC = () => {
         {/* Products */}
         <div>
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div key={product.id} className="border-b w-full py-4 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <Image
-                    src={greenspacesImage}
-                    alt="Product image"
-                    className="h-20 w-20 rounded-lg"
-                    width={20}
-                    height={20}
-                  />
-                  <div className="flex flex-col items-end">
-                    <div className="text-[11px] text-black/50">
-                      {product.daysAgo} days ago
+            <div>
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="border-b w-full  py-4 rounded-lg">
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-3">
+                      {/* <div
+                        className="h-20 w-20 rounded-lg"
+                        style={{
+                          backgroundColor: !product.image ? "#800080" : "transparent",
+                          backgroundImage: product.image ? `url(${product.image})` : "none",
+                          backgroundSize: "cover",
+                        }}
+                      ></div> */}
+                      <Image src={product.image} alt="Product image" className=" h-20 w-20 rounded-lg" width={20} height={20}/>
                     </div>
-                    <div className="text-[16px] font-semibold">
-                      <span className="text-black/50 text-[12px]">Raised</span>{" "}
-                      {product.raised}
+                    <div className="flex flex-col items-end">
+                      <div className="text-[11px] text-black/50">
+                        {product.daysAgo} days ago
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="text-[12px] font-semibold">
+                          Created by  {product.creator ? shortenAddress(product.creator) : "Unknown"}
+                        </span>
+                      </div>
+                      <div className="text-[16px] font-semibold">
+                        <span className="text-black/50 text-[12px]">Raised</span> {product.raised}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex flex-col cursor-pointer" >
+                    <div className="font-medium text-xl mt-3" onClick={() => openModal(product)}>{product.name}</div>
+                    <div className="w-full max-w-[450px]">
+                    <ProductDescription description={product.description} />
+                    </div>
+                  
+                  </div>
                 </div>
-                <div className="font-medium text-xl mt-3">{product.name}</div>
-                <p className="text-sm">{product.description}</p>
-              </div>
-            ))
-          ) : (
-            <div className="text-center text-gray-500">
-              No projects found matching your search.
+              ))}
             </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center mt-10 text-gray-500">
+            <FontAwesomeIcon icon={faSearch} size="4x" className="mb-4" />
+            <p className="text-lg">No products found</p>
+          </div>
           )}
         </div>
       </div>
@@ -263,18 +284,18 @@ export const Features: React.FC = () => {
             <div className="w-full flex justify-center items-center">
               <div className="bg-gray-400/20 w-24 h-1 rounded-lg "></div>
             </div>
-            <div className="flex gap-4 items-center pb-12">
-            <Image src={greenspacesImage} alt="Product image" className=" h-28 w-28 rounded-lg" width={30} height={30}/>
+            <div className="flex gap-4 pt-3">
+            <Image src={selectedProduct.image} alt="Product image" className=" h-20 w-20 rounded-lg" width={20} height={20}/>
 
               <div className="flex flex-col">
-                <h2 className="font-medium text-5xl py-4">{selectedProduct.name}</h2>
-                <p className="pb-4">{selectedProduct.description}</p>
+                <h2 className="font-medium md:text-5xl pb-2 text-xl">{selectedProduct.name}</h2>
+                <p className="pb-4 md:text-[14px] text-[12px] w-full max-w-[1000px]">{selectedProduct.description}</p>
               </div>
             </div>
-            <div className="">
+            <div className=" pt-8">
               <input
                 type="text"
-                placeholder="0.00 in USDC"
+                placeholder="0.00 in SOL"
                 value={inputAmount}
                 onChange={(e) => setInputAmount(e.target.value)}
                 className="modal-input"
@@ -360,25 +381,25 @@ export const Features: React.FC = () => {
   );
 };
 
-// interface ProductDescriptionProps {
-//   description: string; // Define the type for description
-// }
+interface ProductDescriptionProps {
+  description: string; // Define the type for description
+}
 
-// const ProductDescription: React.FC<ProductDescriptionProps> = ({ description }) => {
-//   const [isExpanded, setIsExpanded] = useState(false);
+const ProductDescription: React.FC<ProductDescriptionProps> = ({ description }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   
-//   const toggleReadMore = () => {
-//     setIsExpanded(!isExpanded);
-//   };
+  const toggleReadMore = () => {
+    setIsExpanded(!isExpanded);
+  };
 
-//   return (
-//     <div>
-//       <p className="text-[12px] text-black/70">
-//         {isExpanded ? description : `${description.split(' ').slice(0, 20).join(' ')}...`}
-//       </p>
-//       <button onClick={toggleReadMore} className="text-blue-500 text-[12px]">
-//         {isExpanded ? 'Read less' : 'Read more'}
-//       </button>
-//     </div>
-//   );
-// };
+  return (
+    <div>
+      <p className="text-[12px] text-black/70">
+        {isExpanded ? description : `${description.split(' ').slice(0, 20).join(' ')}...`}
+      </p>
+      <button onClick={toggleReadMore} className="text-blue-500 text-[12px]">
+        {isExpanded ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  );
+};

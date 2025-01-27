@@ -18,7 +18,7 @@ const Button: FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`bg-black text-white py-3 px-4 rounded-lg font-semibold text-[15px] relative hover:opacity-85 ${className}`}
+      className={`bg-black text-white py-2 px-3 rounded-lg font-semibold text-[15px] relative hover:opacity-85 ${className}`}
       disabled={loading}
       onClick={onClick}
     >
