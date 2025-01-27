@@ -35,26 +35,21 @@ To get started, ensure you have the following installed on your machine:
 
 1. Clone the repository:Install the dependencies:
 
-<pre> <code> ```
+<pre> <code>
 npm install
-Install the Solana web3.js library: ``` </code> </pre>
+  </code> </pre>
 
-bash
-npm install @solana/web3.js
-Install Reown AppKit:
-
-bash
-npm install @reown/appkit @reown/appkit-adapter-solana
 Usage
-Social Login Authentication
+## Social Login Authentication
 GetFund uses Reown AppKit for social login authentication. Here’s how it’s implemented:
 
 Import the necessary modules:
 
-JavaScript
+ <code>
 import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 import type { Provider } from '@reown/appkit-adapter-solana/react';
 Initialize the AppKit provider and account:
+
 
 JavaScript
 const { address, isConnected } = useAppKitAccount();
@@ -67,6 +62,7 @@ if (isConnected) {
 } else {
   console.log('User is not connected');
 }
+</code>
 Signing Messages
 To sign messages using Reown AppKit, follow these steps:
 
