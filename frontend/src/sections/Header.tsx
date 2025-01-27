@@ -6,7 +6,7 @@ import { useAppKit, useAppKitAccount, useDisconnect } from '@reown/appkit/react'
 
 export const Header = () => {
   const { open } = useAppKit();
-  const { disconnect } = useDisconnect();
+  // const { disconnect } = useDisconnect();
   const { address, isConnected } = useAppKitAccount();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
