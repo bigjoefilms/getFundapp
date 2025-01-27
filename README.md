@@ -35,9 +35,9 @@ To get started, ensure you have the following installed on your machine:
 
 1. Clone the repository:Install the dependencies:
 
-bash
+<pre> <code> ```
 npm install
-Install the Solana web3.js library:
+Install the Solana web3.js library: ``` </code> </pre>
 
 bash
 npm install @solana/web3.js
