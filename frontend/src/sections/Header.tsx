@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import logoImage from "../../public/assets/logo1.png";
 import Image from "next/image";
 import Button from "../components/Button";
-import { useAppKit, useAppKitAccount, useDisconnect } from '@reown/appkit/react';
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 
 export const Header = () => {
   const { open } = useAppKit();
@@ -41,7 +41,7 @@ export const Header = () => {
     };
   }, [dropdownVisible]);
   return (
-    <header className="md:px-9 px-0 my-6 flex py-2 rounded-xl justify-between container sticky top-0 backdrop-blur-sm z-20 bg-white/30 top-8">
+    <header className="md:px-9 px-0 my-6 flex py-2 rounded-xl justify-between container sticky  backdrop-blur-sm z-20 bg-white/30 top-8">
       <div className="flex items-center gap-3">
         <Image
           src={logoImage}
