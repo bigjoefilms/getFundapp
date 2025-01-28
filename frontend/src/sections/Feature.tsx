@@ -1,27 +1,23 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { products, Product } from "./product";
 import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
-// import { useAppKitConnection } from '@reown/appkit-adapter-solana/react';
 import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
 import { faExclamationTriangle,faSearch  } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Provider } from '@reown/appkit-adapter-solana/react';
 import Image from "next/image";
-// import solartechImage from './assets/solartech_community_charger.png';
-// import cleanwaterImage from './assets/cleanwater_initiative.png';
-// import greenspacesImage from '../assets/greenspaces_urban_gardens.png';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 export const Features: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { address} = useAppKitAccount();
-  // const { connection } = useAppKitConnection();
   const { walletProvider } = useAppKitProvider<Provider>('solana');
-  // const connection = new Connection('https://devnet.helius-rpc.com/?api-key=', 'confirmed');
-  const connection = new Connection(`https://devnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`, 'confirmed');
-
+  console.log("Helius API Key:", process.env.NEXT_PUBLIC_HELIUS_API_KEY);
+  const connection = new Connection(`https://devnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`, 'confirmed');
 
   
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [newProduct, setNewProduct] = useState<Product>({
@@ -222,9 +218,9 @@ export const Features: React.FC = () => {
         >
           Submit a Project
         </button> */}
-        <div className="border px-4 py-4 rounded-lg flex items-center bg-[#fef3eb] my-4">
+        <div className="border px-4 py-3 rounded-lg flex items-center bg-[#fef3eb] my-4">
           <FontAwesomeIcon icon={faExclamationTriangle} className="text-[#f2883c] mr-2" />
-          <span>To get whitelisted, please send us an email at getfundapp@gmail.com.</span>
+          <span className="text-[12px] md:text-[14px]">To get whitelisted, please send us an email at getfundapp@gmail.com.</span>
         </div>
          <h1 className="text-2xl font-medium mt-4">Projects</h1>
         {/* Products */}
@@ -243,7 +239,7 @@ export const Features: React.FC = () => {
                           backgroundSize: "cover",
                         }}
                       ></div> */}
-                      <Image src={product.image} alt="Product image" className=" h-20 w-20 rounded-lg" width={20} height={20}/>
+                      <Image src={product.image} alt="Product image" className="  rounded-lg" height={100} width={100} />
                     </div>
                     <div className="flex flex-col items-end">
                       <div className="text-[11px] text-black/50">
@@ -284,12 +280,13 @@ export const Features: React.FC = () => {
             <div className="w-full flex justify-center items-center">
               <div className="bg-gray-400/20 w-24 h-1 rounded-lg "></div>
             </div>
-            <div className="flex gap-4 pt-3">
-            <Image src={selectedProduct.image} alt="Product image" className=" h-20 w-20 rounded-lg" width={20} height={20}/>
+            <div className="flex gap-4 pt-3 flex-col lg:flex-row">
+            <Image src={selectedProduct.image} alt="Product image" className="  rounded-lg" height={100} width={100}/>
 
               <div className="flex flex-col">
                 <h2 className="font-medium md:text-5xl pb-2 text-xl">{selectedProduct.name}</h2>
-                <p className="pb-4 md:text-[14px] text-[12px] w-full max-w-[1000px]">{selectedProduct.description}</p>
+                <ProductDescription description={selectedProduct.description} />
+                {/* <p className="pb-4 md:text-[14px] text-[12px] w-full max-w-[1000px]">{selectedProduct.description}</p> */}
               </div>
             </div>
             <div className=" pt-8">
@@ -397,7 +394,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({ description }) 
       <p className="text-[12px] text-black/70">
         {isExpanded ? description : `${description.split(' ').slice(0, 20).join(' ')}...`}
       </p>
-      <button onClick={toggleReadMore} className="text-blue-500 text-[12px]">
+      <button onClick={toggleReadMore} className="text-black/60 text-[12px] underline">
         {isExpanded ? 'Read less' : 'Read more'}
       </button>
     </div>

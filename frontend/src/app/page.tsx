@@ -1,4 +1,5 @@
 "use client"
+import { Footer } from "@/sections/Footer";
 import { Features } from "../sections/Feature";
 import { Header } from "../sections/Header";
 import Hero from "../sections/Hero";
@@ -22,6 +23,7 @@ export default function Home() {
 
     <Hero/>
     <Features/>
+    <Footer/>
     
    
     </section>

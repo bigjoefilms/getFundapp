@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+
+export const nextConfig = {
   webpack(config) {
     // Add custom externals
     config.externals = config.externals || [];
@@ -9,6 +11,7 @@ const nextConfig = {
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.(".svg")
     );
+   
 
     config.module.rules.push(
       // Reapply the existing rule, but only for svg imports ending in ?url
