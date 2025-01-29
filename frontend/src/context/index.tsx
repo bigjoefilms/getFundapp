@@ -21,7 +21,7 @@ export const modal = createAppKit({
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
     email:true,
-    socials: ['google'],
+    socials: ['google','x', 'github', 'discord', 'farcaster'],
     emailShowWallets:true,
   },
   themeVariables: {

@@ -2,25 +2,42 @@ import React, { useState, useRef, useEffect } from 'react';
 import logoImage from "../../public/assets/logo1.png";
 import Image from "next/image";
 import Button from "../components/Button";
-import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
+import { useAppKit, useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
+import type { Provider } from '@reown/appkit-adapter-solana/react';
+import avatarImg from '../../public/assets/avatar.png'
 
 export const Header = () => {
   const { open } = useAppKit();
-  // const { disconnect } = useDisconnect();
   const { address, isConnected } = useAppKitAccount();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { walletProvider } = useAppKitProvider<Provider>('solana');
 
-  const handleConnect = () => {
+  const handleSignMsg = async () => {
+    try {
+      if (!walletProvider) return;
+      const encodedMessage = new TextEncoder().encode("Welcome to Getfund");
+      const sig = await walletProvider.signMessage(encodedMessage);
+      console.log("Signed Message:", Buffer.from(sig).toString("hex"));
+    } catch (error) {
+      console.error("Signing failed:", error);
+    }
+  };
+
+  const handleConnect = async () => {
     open();
     setDropdownVisible(true);
   };
 
- 
+  useEffect(() => {
+    if (isConnected) {
+      handleSignMsg();
+    }
+  }, [isConnected]);
 
   const shortenAddress = (address: string | undefined) => {
     if (!address) return '';
-    return `${address.slice(0, 6)}...`;
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   const handleClickOutside = (event: MouseEvent | null) => {
@@ -40,8 +57,9 @@ export const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dropdownVisible]);
+
   return (
-    <header className="md:px-9 px-0 my-6 flex py-2 rounded-xl justify-between container sticky  backdrop-blur-sm z-20 bg-white/30 top-8">
+    <header className="md:px-9 px-0 my-6 flex py-2 rounded-xl justify-between container sticky backdrop-blur-sm z-20 bg-white/30 top-8">
       <div className="flex items-center gap-3">
         <Image
           src={logoImage}
@@ -66,21 +84,11 @@ export const Header = () => {
         </div>
 
         {isConnected ? (
-          <div className="relative">
-            <Button className="text-sm font-normal flex items-center gap-3" onClick={handleConnect}>
-            <div className='h-6 w-6 rounded-full bg-slate-500 '></div>
-            <p className="text-[12px] font-medium">{shortenAddress(address)}</p>
+          <div className="relative " onClick={handleConnect}>
+            <Button className="text-sm font-normal flex items-center gap-3">
+              <div className='h-6 w-6 rounded-full bg-slate-500'> <Image src={avatarImg} alt='avatar '/></div>
+              <p className="text-[12px] font-medium">{shortenAddress(address)}</p>
             </Button>
-
-            {/* {dropdownVisible && (
-              <div className="absolute  mt-2 w-full w-30 bg-white shadow-lg rounded-lg p-4">
-                <div className='h-10 w-10 rounded-full bg-slate-500 my-2'></div>
-                              
-                <Button className="text-sm font-normal mt-2" onClick={handleDisconnect}>
-                  Disconnect
-                </Button>
-              </div>
-            )} */}
           </div>
         ) : (
           <Button className="text-sm font-normal" onClick={handleConnect}>

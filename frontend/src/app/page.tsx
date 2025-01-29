@@ -3,6 +3,7 @@ import { Footer } from "@/sections/Footer";
 import { Features } from "../sections/Feature";
 import { Header } from "../sections/Header";
 import Hero from "../sections/Hero";
+import { LogoTicker } from "@/sections/LogoTicker";
 
 
 
@@ -22,7 +23,9 @@ export default function Home() {
            
 
     <Hero/>
+    
     <Features/>
+    <LogoTicker/>
     <Footer/>
     
    

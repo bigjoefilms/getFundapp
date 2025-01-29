@@ -14,32 +14,20 @@ export const Features: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { address} = useAppKitAccount();
   const { walletProvider } = useAppKitProvider<Provider>('solana');
-  console.log("Helius API Key:", process.env.NEXT_PUBLIC_HELIUS_API_KEY);
-  const connection = new Connection(`https://devnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`, 'confirmed');
-
-  
+  const connection = new Connection(`https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`, 'confirmed');
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
-  const [newProduct, setNewProduct] = useState<Product>({
-    id: 0,
-    name: "",
-    description: "",
-    raised: "$0",
-    creator: "0x0",
-    daysAgo: 0,
-    image: "",
-    category: "Infrastructure", // Default category
-  });
- 
-
   const modalRef = useRef<HTMLDivElement>(null);
   const [inputAmount, setInputAmount] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>(""); // State for search input
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [balance, setBalance] = useState<number | null>(null); 
+  const creatorAddress = "EFzmBNRFz8cDpUrN8vMjh7jQexiWQr5E7LTzH9vokLMN";   
+  const wallet = address ? new PublicKey(address) : null; 
 
-  // Filter products based on selected category and search term
+
+  // filter products based on selected category and search term
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
       selectedCategory === "All" || product.category === selectedCategory;
@@ -48,6 +36,20 @@ export const Features: React.FC = () => {
       .includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearchTerm;
   });
+
+  // function to get the balance
+ const handleGetBalance = async (creatorAddress: string) => {
+    try {
+      const wallet = new PublicKey(creatorAddress); 
+      const balanceInLamports = await connection?.getBalance(wallet);
+
+      // Update the state with the balance in SOL, formatted to 3 decimal places
+      setBalance(balanceInLamports ? parseFloat((balanceInLamports / LAMPORTS_PER_SOL).toFixed(3)) : 0);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      setBalance(null); 
+    }
+  };
 
   const openModal = (product: Product) => {
     setSelectedProduct(product);
@@ -66,21 +68,24 @@ export const Features: React.FC = () => {
     document.body.style.overflow = "auto"; // Restore background scrolling
   };
 
-  // const openCreateModal = () => {
-  //   setCreateModalOpen(true);
-  //   document.body.style.overflow = "hidden"; // Prevent background scrolling
-  // };
-
-  const closeCreateModal = () => {
-    setCreateModalOpen(false);
-    document.body.style.overflow = "auto"; // Restore background scrolling
-  };
-
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeModal();
     }
   }, [modalRef]);
+
+  useEffect(() => {
+    // Call the function immediately on mount
+    handleGetBalance(creatorAddress);
+    
+    // Set up an interval to call the function every 10 seconds (10000 ms)
+    const intervalId = setInterval(() => {
+      handleGetBalance(creatorAddress);
+    }, 10000); // Adjust the interval as needed
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [creatorAddress, handleGetBalance]); // Include handleGetBalance in the dependency array
 
   useEffect(() => {
     if (modalOpen) {
@@ -95,46 +100,8 @@ export const Features: React.FC = () => {
     };
   }, [modalOpen, handleClickOutside]); // Add `handleClickOutside` as a dependency
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewProduct((prev) => ({ ...prev, [name]: value }));
-  };
+ 
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProduct((prev) => ({ ...prev, image: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleFormSubmit = () => {
-    const newProductData = {
-      ...newProduct,
-      id: products.length + 1,
-      daysAgo: 0,
-      creator: address || "Unknown", // Automatically assign the connected wallet address
-    };
-  
-    products.push(newProductData); // Add new product to the list
-  
-    // Reset form
-    setNewProduct({
-      id: 0,
-      name: "",
-      description: "",
-      raised: "$0",
-      creator: "" ,
-      daysAgo: 0,
-      image: "",
-      category: "Infrastructure", // Default category
-    });
-  
-    closeCreateModal();
-  };
 
   const handleFund = async () => {
     if (!inputAmount || isNaN(Number(inputAmount)) || Number(inputAmount) <= 0) {
@@ -159,9 +126,9 @@ export const Features: React.FC = () => {
       }
       const receiver = new PublicKey(selectedProduct.creator);
       const latestBlockhash = await connection.getLatestBlockhash();
-
+   
       const transaction = new Transaction({
-        feePayer: new PublicKey(address),
+        feePayer: wallet,
         recentBlockhash: latestBlockhash.blockhash,
       }).add(
         SystemProgram.transfer({
@@ -186,6 +153,7 @@ export const Features: React.FC = () => {
 
   return (
     <section>
+       
       <div className="mt-32 flex relative w-full flex-col md:container cursor-pointer">
         {/* Category Buttons */}
         <div className="flex md:gap-4 gap-2 mb-4">
@@ -212,17 +180,13 @@ export const Features: React.FC = () => {
             className="w-full px-4 py-2 border border-darkGray rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700"
           />
         </div>
-        {/* <button
-          // onClick={openCreateModal}
-          className="mb-4 py-2 px-6 bg-white text-black rounded-lg font-semibold mt-4 cursor-not-allowed"
-        >
-          Submit a Project
-        </button> */}
-        <div className="border px-4 py-3 rounded-lg flex items-center bg-[#fef3eb] my-4">
-          <FontAwesomeIcon icon={faExclamationTriangle} className="text-[#f2883c] mr-2" />
+        <div className="border px-4 py-3 rounded-lg flex items-center bg-[#fef3eb] my-4 gap-2">
+          <FontAwesomeIcon icon={faExclamationTriangle} className="text-[#f2883c] mr-2 h-4 w-4" />
           <span className="text-[12px] md:text-[14px]">To get whitelisted, please send us an email at getfundapp@gmail.com.</span>
         </div>
          <h1 className="text-2xl font-medium mt-4">Projects</h1>
+
+
         {/* Products */}
         <div>
           {filteredProducts.length > 0 ? (
@@ -230,15 +194,7 @@ export const Features: React.FC = () => {
               {filteredProducts.map((product) => (
                 <div key={product.id} className="border-b w-full  py-4 rounded-lg">
                   <div className="flex justify-between items-center ">
-                    <div className="flex gap-3">
-                      {/* <div
-                        className="h-20 w-20 rounded-lg"
-                        style={{
-                          backgroundColor: !product.image ? "#800080" : "transparent",
-                          backgroundImage: product.image ? `url(${product.image})` : "none",
-                          backgroundSize: "cover",
-                        }}
-                      ></div> */}
+                    <div className="flex gap-3">                     
                       <Image src={product.image} alt="Product image" className="  rounded-lg" height={100} width={100} />
                     </div>
                     <div className="flex flex-col items-end">
@@ -251,7 +207,14 @@ export const Features: React.FC = () => {
                         </span>
                       </div>
                       <div className="text-[16px] font-semibold">
-                        <span className="text-black/50 text-[12px]">Raised</span> {product.raised}
+                        <span className="text-black/50 text-[12px]">Raised</span>   <div>
+     
+      {balance !== null ? (
+        <p>{balance} SOL</p>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
                       </div>
                     </div>
                   </div>
@@ -273,6 +236,8 @@ export const Features: React.FC = () => {
           )}
         </div>
       </div>
+
+
       {/* Modal for product details */}
       {modalOpen && selectedProduct && (
         <div className="modal-overlay">
@@ -286,7 +251,6 @@ export const Features: React.FC = () => {
               <div className="flex flex-col">
                 <h2 className="font-medium md:text-5xl pb-2 text-xl">{selectedProduct.name}</h2>
                 <ProductDescription description={selectedProduct.description} />
-                {/* <p className="pb-4 md:text-[14px] text-[12px] w-full max-w-[1000px]">{selectedProduct.description}</p> */}
               </div>
             </div>
             <div className=" pt-8">
@@ -306,80 +270,13 @@ export const Features: React.FC = () => {
         </div>
       )}
 
-      {/* Modal for creating a new product */}
-      {createModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-[90%] max-w-[400px]">
-            <h2 className="text-xl font-bold mb-4 text-center ">Create a New Project</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleFormSubmit(); }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Project Name"
-                value={newProduct.name}
-                onChange={handleFormChange}
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-                required
-              />
-              <textarea
-                name="description"
-                placeholder="Project Description"
-                value={newProduct.description}
-                onChange={handleFormChange}
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-                required
-              />
-              <select
-                name="category"
-                value={newProduct.category}
-                onChange={(e) => setNewProduct((prev) => ({ 
-                  ...prev, 
-                  category: e.target.value as "Infrastructure" | "DAO" | "Dev Tool" | "DeFi"
-                }))}
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-                required
-              >
-                <option value="Infrastructure">Infrastructure</option>
-                <option value="DAO">DAO</option>
-                <option value="Dev Tool">Dev Tool</option>
-                <option value="DeFi">DeFi</option>
-              </select>
-              <input
-                type="text"
-                name="creator"
-                placeholder="Creator Address"
-                value={address}
-                onChange={handleFormChange}
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-              />
-              <button
-                type="submit"
-                className="w-full py-2 mt-4 bg-black text-white rounded-lg font-semibold"
-              >
-                Create Project
-              </button>
-            </form>
-            <button
-              onClick={closeCreateModal}
-              className="w-full py-2 mt-2 text-black rounded-md bg-gray-200"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+     
     </section>
   );
 };
 
 interface ProductDescriptionProps {
-  description: string; // Define the type for description
+  description: string; 
 }
 
 const ProductDescription: React.FC<ProductDescriptionProps> = ({ description }) => {
