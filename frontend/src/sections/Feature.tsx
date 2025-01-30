@@ -23,8 +23,10 @@ export const Features: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(""); // State for search input
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [balance, setBalance] = useState<number | null>(null); 
-  const creatorAddress = "EFzmBNRFz8cDpUrN8vMjh7jQexiWQr5E7LTzH9vokLMN";   
+  const creatorAddress = "6trZQ2U1oWzLmcqRT98ba7JtMZsdnrzNEzN7svH11VCy";   
   const wallet = address ? new PublicKey(address) : null; 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
 
 
   // filter products based on selected category and search term
@@ -101,22 +103,20 @@ export const Features: React.FC = () => {
   }, [modalOpen, handleClickOutside]); // Add `handleClickOutside` as a dependency
 
  
-
-
   const handleFund = async () => {
     if (!inputAmount || isNaN(Number(inputAmount)) || Number(inputAmount) <= 0) {
       setError("Please enter a valid amount.");
       return;
     }
-
+  
     if (!address) {
       setError("Wallet not connected.");
       return;
     }
-
+  
     setError("");
     setLoading(true);
-
+  
     try {
       if (!selectedProduct?.creator) {
         throw new Error("Creator address is not defined.");
@@ -126,7 +126,7 @@ export const Features: React.FC = () => {
       }
       const receiver = new PublicKey(selectedProduct.creator);
       const latestBlockhash = await connection.getLatestBlockhash();
-   
+  
       const transaction = new Transaction({
         feePayer: wallet,
         recentBlockhash: latestBlockhash.blockhash,
@@ -137,19 +137,73 @@ export const Features: React.FC = () => {
           lamports: LAMPORTS_PER_SOL * parseFloat(inputAmount),
         })
       );
-
-      // Raise the modal to sign and send the transaction
+  
+      // Send transaction
       const signature = await walletProvider.sendTransaction(transaction, connection);
       console.log("Transaction signature:", signature);
+  
+      // Show success message
+      setSuccessMessage("Funding Successful!");
+      setTimeout(() => setSuccessMessage(null), 3000); // Hide after 3s
+  
+      // Reset state
       setLoading(false);
+      setInputAmount('');
       closeModal();
     } catch (error) {
       console.error("Transaction failed:", error);
       setLoading(false);
       setError("Transaction Rejected. Please try again.");
-      setInputAmount('')
     }
   };
+
+  // const handleFund = async () => {
+  //   if (!inputAmount || isNaN(Number(inputAmount)) || Number(inputAmount) <= 0) {
+  //     setError("Please enter a valid amount.");
+  //     return;
+  //   }
+
+  //   if (!address) {
+  //     setError("Wallet not connected.");
+  //     return;
+  //   }
+
+  //   setError("");
+  //   setLoading(true);
+
+  //   try {
+  //     if (!selectedProduct?.creator) {
+  //       throw new Error("Creator address is not defined.");
+  //     }
+  //     if (!connection) {
+  //       throw new Error("Connection is not established.");
+  //     }
+  //     const receiver = new PublicKey(selectedProduct.creator);
+  //     const latestBlockhash = await connection.getLatestBlockhash();
+   
+  //     const transaction = new Transaction({
+  //       feePayer: wallet,
+  //       recentBlockhash: latestBlockhash.blockhash,
+  //     }).add(
+  //       SystemProgram.transfer({
+  //         fromPubkey: new PublicKey(address),
+  //         toPubkey: receiver,
+  //         lamports: LAMPORTS_PER_SOL * parseFloat(inputAmount),
+  //       })
+  //     );
+
+  //     // Raise the modal to sign and send the transaction
+  //     const signature = await walletProvider.sendTransaction(transaction, connection);
+  //     console.log("Transaction signature:", signature);
+  //     setLoading(false);
+  //     closeModal();
+  //   } catch (error) {
+  //     console.error("Transaction failed:", error);
+  //     setLoading(false);
+  //     setError("Transaction Rejected. Please try again.");
+  //     setInputAmount('')
+  //   }
+  // };
 
   return (
     <section>
@@ -269,6 +323,11 @@ export const Features: React.FC = () => {
           </div>
         </div>
       )}
+      {successMessage && (
+  <div className="fixed bottom-10 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+    {successMessage}
+  </div>
+)}
 
      
     </section>
